@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\RecordsAuthors;
+use App\Models\Concerns\SearchesText;
 use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     /** @use HasFactory<CustomerFactory> */
-    use HasFactory, RecordsAuthors;
+    use HasFactory, RecordsAuthors, SearchesText;
 
     /**
      * Mirrors the column default so new models are complete before a refresh.
@@ -38,18 +39,6 @@ class Customer extends Model
     #[Scope]
     protected function search(Builder $query, ?string $term): void
     {
-        $term = trim((string) $term);
-
-        if ($term === '') {
-            return;
-        }
-
-        $like = '%'.addcslashes($term, '%_\\').'%';
-
-        $query->where(function (Builder $q) use ($like) {
-            $q->where('name', 'like', $like)
-                ->orWhere('email', 'like', $like)
-                ->orWhere('phone', 'like', $like);
-        });
+        $this->whereAnyContains($query, ['name', 'email', 'phone'], $term);
     }
 }

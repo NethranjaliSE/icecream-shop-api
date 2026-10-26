@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\RecordsAuthors;
+use App\Models\Concerns\SearchesText;
 use Database\Factories\ItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Item extends Model
 {
     /** @use HasFactory<ItemFactory> */
-    use HasFactory, RecordsAuthors;
+    use HasFactory, RecordsAuthors, SearchesText;
 
     /**
      * Mirrors the column defaults so new models are complete before a refresh.
@@ -58,11 +59,7 @@ class Item extends Model
     #[Scope]
     protected function search(Builder $query, ?string $term): void
     {
-        $term = trim((string) $term);
-
-        if ($term !== '') {
-            $query->where('name', 'like', '%'.addcslashes($term, '%_\\').'%');
-        }
+        $this->whereAnyContains($query, ['name'], $term);
     }
 
     #[Scope]
