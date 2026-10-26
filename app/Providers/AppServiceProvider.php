@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use Carbon\CarbonInterval;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -23,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configurePassport();
+        $this->configureRateLimiting();
     }
 
     /**
@@ -32,7 +37,19 @@ class AppServiceProvider extends ServiceProvider
     protected function configurePassport(): void
     {
         Passport::personalAccessTokensExpireIn(
-            now()->addHours(config('auth.token_ttl_hours'))
+            CarbonInterval::hours(config('auth.token_ttl_hours'))
         );
+    }
+
+    /**
+     * Slow down password guessing: 5 login attempts per minute per email + IP.
+     */
+    protected function configureRateLimiting(): void
+    {
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(5)->by(
+                strtolower((string) $request->input('email')).'|'.$request->ip()
+            );
+        });
     }
 }
