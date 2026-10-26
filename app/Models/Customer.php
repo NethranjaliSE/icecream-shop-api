@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Concerns\RecordsAuthors;
+use Database\Factories\CustomerFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+#[Fillable(['name', 'email', 'phone', 'address', 'loyalty_points'])]
+class Customer extends Model
+{
+    /** @use HasFactory<CustomerFactory> */
+    use HasFactory, RecordsAuthors;
+
+    protected function casts(): array
+    {
+        return [
+            'loyalty_points' => 'integer',
+        ];
+    }
+
+    /**
+     * Matches the term against name, email or phone.
+     */
+    #[Scope]
+    protected function search(Builder $query, ?string $term): void
+    {
+        $term = trim((string) $term);
+
+        if ($term === '') {
+            return;
+        }
+
+        $like = '%'.addcslashes($term, '%_\\').'%';
+
+        $query->where(function (Builder $q) use ($like) {
+            $q->where('name', 'like', $like)
+                ->orWhere('email', 'like', $like)
+                ->orWhere('phone', 'like', $like);
+        });
+    }
+}
