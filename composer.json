@@ -35,9 +35,8 @@
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
-            "@php artisan migrate:fresh --seed --force",
             "@php artisan passport:keys --force",
-            "@php artisan passport:client --personal --name=\"Ice Cream Shop Personal Access Client\" --provider=users --no-interaction"
+            "@php artisan migrate --seed --force"
         ],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
