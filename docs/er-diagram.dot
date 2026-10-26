@@ -1,0 +1,104 @@
+// Entity-Relationship diagram for the Ice Cream Shop API.
+// Regenerate the images with:
+//   dot -Tsvg docs/er-diagram.dot -o docs/er-diagram.svg
+//   dot -Tpng -Gdpi=160 docs/er-diagram.dot -o docs/er-diagram.png
+digraph ER {
+    graph [rankdir=LR, splines=spline, nodesep=0.55, ranksep=1.25, pad=0.4,
+           fontname="Helvetica", bgcolor="white",
+           label=<<B>Ice Cream Shop — Entity Relationship Diagram</B><BR/><FONT POINT-SIZE="11" COLOR="#555555">PK primary key · FK foreign key · UK unique · crow's foot = many, bar = one, circle = optional</FONT>>,
+           labelloc=t, fontsize=18];
+    node  [shape=plain, fontname="Helvetica", fontsize=11];
+    edge  [fontname="Helvetica", fontsize=10, color="#555555", fontcolor="#333333", dir=both, penwidth=1.2];
+
+    users [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#3B4A6B">
+      <TR><TD BGCOLOR="#3B4A6B" COLSPAN="3"><FONT COLOR="white"><B>users</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>id</B></TD><TD ALIGN="LEFT">bigint</TD><TD ALIGN="LEFT" PORT="id"><FONT COLOR="#B8860B">PK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD><TD ALIGN="LEFT">varchar(255)</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">email</TD><TD ALIGN="LEFT">varchar(255)</TD><TD ALIGN="LEFT"><FONT COLOR="#2E7D32">UK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#EEF1F7"><B>role</B></TD><TD ALIGN="LEFT" BGCOLOR="#EEF1F7">enum(owner, manager, cashier)</TD><TD BGCOLOR="#EEF1F7"></TD></TR>
+      <TR><TD ALIGN="LEFT">password</TD><TD ALIGN="LEFT">varchar(255)</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">email_verified_at</TD><TD ALIGN="LEFT">timestamp?</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">remember_token</TD><TD ALIGN="LEFT">varchar(100)?</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">created_at, updated_at</TD><TD ALIGN="LEFT">timestamp</TD><TD></TD></TR>
+    </TABLE>>];
+
+    categories [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#B5476B">
+      <TR><TD BGCOLOR="#B5476B" COLSPAN="3"><FONT COLOR="white"><B>categories</B>  (flavours)</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>id</B></TD><TD ALIGN="LEFT">bigint</TD><TD ALIGN="LEFT" PORT="id"><FONT COLOR="#B8860B">PK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD><TD ALIGN="LEFT">varchar(50)</TD><TD ALIGN="LEFT"><FONT COLOR="#2E7D32">UK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">description</TD><TD ALIGN="LEFT">text?</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">created_at, updated_at</TD><TD ALIGN="LEFT">timestamp</TD><TD></TD></TR>
+    </TABLE>>];
+
+    items [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#B5476B">
+      <TR><TD BGCOLOR="#B5476B" COLSPAN="3"><FONT COLOR="white"><B>items</B>  (inventory)</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>id</B></TD><TD ALIGN="LEFT">bigint</TD><TD ALIGN="LEFT"><FONT COLOR="#B8860B">PK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="category_id">category_id</TD><TD ALIGN="LEFT">bigint</TD><TD ALIGN="LEFT"><FONT COLOR="#1565C0">FK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD><TD ALIGN="LEFT">varchar(100)</TD><TD ALIGN="LEFT"><FONT COLOR="#777777">idx</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">sku</TD><TD ALIGN="LEFT">varchar(32)</TD><TD ALIGN="LEFT"><FONT COLOR="#2E7D32">UK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">description</TD><TD ALIGN="LEFT">text?</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">price</TD><TD ALIGN="LEFT">decimal(10,2)</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">quantity</TD><TD ALIGN="LEFT">int unsigned</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">reorder_level</TD><TD ALIGN="LEFT">int unsigned</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="created_by">created_by</TD><TD ALIGN="LEFT">bigint?</TD><TD ALIGN="LEFT"><FONT COLOR="#1565C0">FK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="updated_by">updated_by</TD><TD ALIGN="LEFT">bigint?</TD><TD ALIGN="LEFT"><FONT COLOR="#1565C0">FK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">created_at, updated_at</TD><TD ALIGN="LEFT">timestamp</TD><TD></TD></TR>
+    </TABLE>>];
+
+    customers [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#2F7D6D">
+      <TR><TD BGCOLOR="#2F7D6D" COLSPAN="3"><FONT COLOR="white"><B>customers</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>id</B></TD><TD ALIGN="LEFT">bigint</TD><TD ALIGN="LEFT"><FONT COLOR="#B8860B">PK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD><TD ALIGN="LEFT">varchar(100)</TD><TD ALIGN="LEFT"><FONT COLOR="#777777">idx</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">email</TD><TD ALIGN="LEFT">varchar(255)?</TD><TD ALIGN="LEFT"><FONT COLOR="#2E7D32">UK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">phone</TD><TD ALIGN="LEFT">varchar(20)?</TD><TD ALIGN="LEFT"><FONT COLOR="#2E7D32">UK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">address</TD><TD ALIGN="LEFT">varchar(255)?</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">loyalty_points</TD><TD ALIGN="LEFT">int unsigned</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="created_by">created_by</TD><TD ALIGN="LEFT">bigint?</TD><TD ALIGN="LEFT"><FONT COLOR="#1565C0">FK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="updated_by">updated_by</TD><TD ALIGN="LEFT">bigint?</TD><TD ALIGN="LEFT"><FONT COLOR="#1565C0">FK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">created_at, updated_at</TD><TD ALIGN="LEFT">timestamp</TD><TD></TD></TR>
+    </TABLE>>];
+
+    oauth_access_tokens [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#6B7280">
+      <TR><TD BGCOLOR="#6B7280" COLSPAN="3"><FONT COLOR="white"><B>oauth_access_tokens</B>  (Passport)</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>id</B></TD><TD ALIGN="LEFT">char(80)</TD><TD ALIGN="LEFT"><FONT COLOR="#B8860B">PK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="user_id">user_id</TD><TD ALIGN="LEFT">bigint?</TD><TD ALIGN="LEFT"><FONT COLOR="#1565C0">FK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="client_id">client_id</TD><TD ALIGN="LEFT">char(36)</TD><TD ALIGN="LEFT"><FONT COLOR="#1565C0">FK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD><TD ALIGN="LEFT">varchar(255)?</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">scopes</TD><TD ALIGN="LEFT">text?</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">revoked</TD><TD ALIGN="LEFT">boolean</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">expires_at</TD><TD ALIGN="LEFT">datetime?</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">created_at, updated_at</TD><TD ALIGN="LEFT">timestamp</TD><TD></TD></TR>
+    </TABLE>>];
+
+    oauth_clients [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#6B7280">
+      <TR><TD BGCOLOR="#6B7280" COLSPAN="3"><FONT COLOR="white"><B>oauth_clients</B>  (Passport)</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>id</B></TD><TD ALIGN="LEFT">uuid</TD><TD ALIGN="LEFT" PORT="id"><FONT COLOR="#B8860B">PK</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD><TD ALIGN="LEFT">varchar(255)</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">provider</TD><TD ALIGN="LEFT">varchar(255)?</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">grant_types</TD><TD ALIGN="LEFT">json text</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">revoked</TD><TD ALIGN="LEFT">boolean</TD><TD></TD></TR>
+      <TR><TD ALIGN="LEFT">created_at, updated_at</TD><TD ALIGN="LEFT">timestamp</TD><TD></TD></TR>
+    </TABLE>>];
+
+    // categories 1 ── 0..* items
+    categories:id:e -> items:category_id:w [arrowtail=teetee, arrowhead=crowodot, label="  has  "];
+
+    // users 0..1 ── 0..* items / customers (audit trail, SET NULL on user delete)
+    users:id:e -> items:created_by:w     [arrowtail=teeodot, arrowhead=crowodot, label=" created ", color="#3B4A6B"];
+    users:id:e -> items:updated_by:w     [arrowtail=teeodot, arrowhead=crowodot, label=" last updated ", color="#3B4A6B", style=dashed];
+    users:id:e -> customers:created_by:w [arrowtail=teeodot, arrowhead=crowodot, label=" created ", color="#2F7D6D"];
+    users:id:e -> customers:updated_by:w [arrowtail=teeodot, arrowhead=crowodot, label=" last updated ", color="#2F7D6D", style=dashed];
+
+    // users 1 ── 0..* access tokens; clients 1 ── 0..* access tokens
+    users:id:e -> oauth_access_tokens:user_id:w         [arrowtail=teetee, arrowhead=crowodot, label=" logs in with "];
+    oauth_clients:id:e -> oauth_access_tokens:client_id:w [arrowtail=teetee, arrowhead=crowodot, label=" issues "];
+
+    { rank=same; users; categories; oauth_clients; }
+    { rank=same; items; customers; oauth_access_tokens; }
+}
