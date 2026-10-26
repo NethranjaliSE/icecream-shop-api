@@ -16,6 +16,15 @@ class Customer extends Model
     /** @use HasFactory<CustomerFactory> */
     use HasFactory, RecordsAuthors;
 
+    /**
+     * Mirrors the column default so new models are complete before a refresh.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'loyalty_points' => 0,
+    ];
+
     protected function casts(): array
     {
         return [
