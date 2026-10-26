@@ -33,7 +33,7 @@ return [
     | users are actually retrieved out of your database or other storage
     | system used by the application. Typically, Eloquent is utilized.
     |
-    | Supported: "session"
+    | Supported: "session", "passport"
     |
     */
 
@@ -42,7 +42,24 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+        ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | API Access Token Lifetime
+    |--------------------------------------------------------------------------
+    |
+    | Number of hours a personal access token issued by POST /api/auth/login
+    | stays valid. Defaults to a typical shop shift.
+    |
+    */
+
+    'token_ttl_hours' => (int) env('AUTH_TOKEN_TTL_HOURS', 8),
 
     /*
     |--------------------------------------------------------------------------
