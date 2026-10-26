@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ItemController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,4 +26,11 @@ Route::prefix('auth')->name('auth.')->group(function () {
         Route::get('me', [AuthController::class, 'me'])->name('me');
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+
+    // Role checks live in ItemController::middleware() via ItemPolicy.
+    Route::apiResource('items', ItemController::class);
 });

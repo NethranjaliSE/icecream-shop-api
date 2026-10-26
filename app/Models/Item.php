@@ -20,6 +20,16 @@ class Item extends Model
     /** @use HasFactory<ItemFactory> */
     use HasFactory, RecordsAuthors;
 
+    /**
+     * Mirrors the column defaults so new models are complete before a refresh.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'quantity' => 0,
+        'reorder_level' => 10,
+    ];
+
     protected function casts(): array
     {
         return [
