@@ -72,7 +72,7 @@ A request without a valid token gets **401**. A signed-in user without the permi
 
 ```bash
 # 1. Get the code and install dependencies
-git clone https://github.com/<your-username>/icecream-shop-api.git
+git clone https://github.com/NethranjaliSE/icecream-shop-api.git
 cd icecream-shop-api
 composer install
 
@@ -405,6 +405,3 @@ tests/
 - **Consistent JSON.** API requests are forced to expect JSON, so a missing token yields `401` JSON rather than a redirect, and 404 messages say "Item not found." instead of exposing class names.
 - **Data integrity in the database too.** Unsigned stock columns, `DECIMAL` money, unique SKU / email / phone and a restrict-on-delete foreign key from items to flavours back up the request validation.
 
-### Optional WPF client
-
-Not implemented; this repository is the backend only. The API is client-ready: a desktop client would call `POST /api/auth/login`, keep the `access_token`, send it as a Bearer header, and can use `user.permissions` to enable or disable actions in its UI.
